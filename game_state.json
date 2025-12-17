@@ -1,0 +1,87 @@
+{
+  "players": [
+    "Riku",
+    "Hoppe"
+  ],
+  "current_turn": 1,
+  "round": 6,
+  "turn_start_time": 1765959572.1900375,
+  "characters": {
+    "Riku": {
+      "attributes": {},
+      "skills": {},
+      "inventory": [],
+      "notes": ""
+    },
+    "Hoppe": {
+      "attributes": {},
+      "skills": {},
+      "inventory": [],
+      "notes": ""
+    }
+  },
+  "last_action": "**Riku:** Do I know any magic? If so, I want to cast something that creates light. Roll dice for casting spell\nRiku pauses, recalling the faint flickers of energy he felt earlier when he picked up the key. In this moment of urgency, he searches his mind for any knowledge of magic he might possess. Perhaps he h",
+  "scene": "The adventure begins...",
+  "history": [
+    {
+      "player": "Riku",
+      "action": "Where am I?",
+      "response": "As Riku opens his eyes, he finds himself lying on a cold, damp stone floor. The air is thick with the smell of moss and damp earth, and the distant sound of dripping water echoes through the darkness. Slowly sitting up, he realizes he is in a dimly lit underground chamber, the walls adorned with strange, ancient carvings that seem to depict long-forgotten tales of heroes and monsters.\n\nA flickering torch mounted on the wall casts eerie shadows, revealing two exits: one to the left, leading deeper into the darkness, and another to the right, where a faint light glimmers in the distance. Riku's heart races as he takes in his surroundings, feeling an inexplicable pull toward the light. \n\nHis mind races with questions: How did he end up here? What lies beyond the exits? But for now, he knows he must decide his next move. \n\nWhat will Riku do?"
+    },
+    {
+      "player": "Riku",
+      "action": "Look around if there are any other players around",
+      "response": "Riku scans the chamber, his eyes darting from one shadowy corner to another. The flickering torchlight dances across the walls, but there are no other figures in sight. The silence is palpable, broken only by the sound of dripping water and the faint rustle of something unseen. \n\nAs he continues to search, he notices a faint glimmer on the ground near one of the walls. It appears to be a small, metallic object partially covered by dirt and debris. Curiosity piqued, Riku moves closer, hoping to find a clue or perhaps a tool that could aid him in this mysterious place.\n\nThough he feels a sense of isolation, Riku can\u2019t shake the feeling that he is not entirely alone. The air is charged with a sense of anticipation, as if the chamber itself is waiting for something to unfold.\n\nWhat will Riku do next?"
+    },
+    {
+      "player": "Hoppe",
+      "action": "Hoppe snores",
+      "response": "As Riku kneels to inspect the glimmering object, a sudden loud snore echoes through the chamber, breaking the silence. Riku looks around, startled, and realizes that the sound is coming from a figure sprawled on the floor a few feet away. It\u2019s a small, stout creature with a tuft of wild hair and a comically oversized nose. This is Hoppe, a gnome who seems to have found a cozy spot to nap amidst the chaos.\n\nRiku watches as Hoppe snores blissfully, completely unaware of the mysterious surroundings and the potential dangers lurking nearby. The gnome's presence adds a strange sense of comfort, yet Riku can\u2019t help but wonder why someone would choose to sleep in such a dark and foreboding place.\n\nThe glimmering object remains at Riku's feet, and the two exits are still visible\u2014one leading deeper into the shadows and the other toward the faint light. \n\nWhat will Riku do next?"
+    },
+    {
+      "player": "Riku",
+      "action": "Try to wake up Hoppe",
+      "response": "Riku approaches the sleeping gnome, crouching down beside him. He gently shakes Hoppe's shoulder, calling out, \"Hey, wake up! We\u2019re not alone here!\" \n\nAt first, Hoppe merely mumbles in his sleep, swatting at Riku's hand as if brushing away an annoying fly. But after a few more shakes and a louder call, the gnome's eyes flutter open. He groggily blinks at Riku, rubbing the sleep from his eyes before finally focusing on the surroundings.\n\n\"Wh-what? Where am I?\" Hoppe stammers, looking around in confusion. The realization of their strange location begins to dawn on him, and he sits up, brushing dirt from his clothes. \"Is this a dungeon? I hate dungeons!\" he exclaims, his voice a mix of annoyance and apprehension.\n\nRiku gestures toward the glimmering object on the ground and the two exits. \"I found something over here, and we have two ways to go. We need to decide what to do next.\"\n\nWhat will Hoppe do?"
+    },
+    {
+      "player": "Hoppe",
+      "action": "I try to find flask I had earlier and drink the contents, liquorice root juice, unfiltered. Then looks where riku points and asks how didbwe got here?",
+      "response": "Hoppe rummages through his pockets, his fingers searching for the familiar shape of his flask. After a moment of digging, he triumphantly pulls out a small, worn leather flask, its surface embossed with curious designs. With a quick twist of the cap, he takes a hearty swig of the unfiltered liquorice root juice inside, savoring the earthy sweetness that fills his mouth. The warmth spreads through him, chasing away the lingering grogginess.\n\nWiping his mouth with the back of his hand, Hoppe looks at Riku, his expression shifting from confusion to curiosity. \"So, how did we get here? This place isn't exactly a five-star inn!\" His eyes dart around the chamber, taking in the eerie carvings and the faint light in the distance. \n\nRiku shrugs, unsure of how to explain their predicament. \"I just woke up here, too. I don't remember anything before this.\" \n\nWith a newfound clarity from the drink, Hoppe glances at the glimmering object on the ground and then toward the exits. \"Well, we can\u2019t just sit here. Should we check that shiny thing or see where the light leads?\"\n\nWhat will Hoppe do next?"
+    },
+    {
+      "player": "Riku",
+      "action": "Meditate a bit, then pick up the shiny object hoping its nothing terrible. Investigate the object",
+      "response": "Riku takes a moment to center himself, closing his eyes and focusing on his breath. The cool air of the chamber fills his lungs as he tries to attune his mind to the environment around him. Images of the strange carvings and the distant light swirl in his thoughts, urging him to be cautious yet curious. After a brief meditation, he feels a sense of clarity and resolve wash over him.\n\nOpening his eyes, Riku bends down and carefully picks up the shiny object. It\u2019s a small, ornate key, its surface engraved with intricate patterns that shimmer even in the dim light. The metal is cool to the touch, and Riku can feel a faint pulse of energy emanating from it, as if it holds some significance.\n\nAs he investigates the key further, he notices that it has a peculiar inscription along its shaft\u2014an ancient language that seems to whisper forgotten secrets. Riku can\u2019t shake the feeling that this key might unlock something important, perhaps a door or a chest hidden within the dungeon.\n\nHoppe, noticing Riku's focused expression, leans in closer. \"What did you find?\" he asks, his curiosity piqued.\n\nWhat will Riku do next?"
+    },
+    {
+      "player": "Hoppe",
+      "action": "\"Is that a key? I wonder where that fits. Lets get out of here\"",
+      "response": "Excited by the prospect of adventure, Hoppe leans in closer to examine the key in Riku's hand. \"Is that a key? I wonder where that fits,\" he muses, his eyes sparkling with intrigue. \"Maybe it unlocks a treasure or a secret passage! We should definitely find out.\"\n\nWith renewed determination, Hoppe gets to his feet, brushing off the dirt from his clothes. He glances toward the two exits\u2014the dark passage to the left and the faint light to the right. \"I say we head toward the light. It might lead us to the next clue or a way out of this place!\"\n\nRiku nods in agreement, sensing that the key might indeed play a crucial role in their journey ahead. Together, they approach the illuminated path, the soft glow growing brighter as they near it. The air shifts, carrying a whisper of hope mixed with the faint scent of something floral.\n\nAs they step into the light, they find themselves in a narrow corridor lined with more carvings, but this time, they depict scenes of triumph and celebration. The atmosphere feels different, charged with potential. \n\nWhat will Riku and Hoppe do next?"
+    },
+    {
+      "player": "Riku",
+      "action": "Sneak forward, roll for sneaking",
+      "response": "Riku takes a deep breath, feeling the weight of the moment. He knows that caution is key in an unknown place like this. With his heart pounding, he decides to sneak forward, trying to remain as quiet as possible as he glides into the corridor.\n\n*Rolling for sneaking...*\n\n(Roll: 4 + relevant attribute 0 + relevant skill 0 = 4)\n\nAs Riku moves stealthily along the corridor, he does his best to keep his footsteps light. However, the damp stone floor is slick, and as he takes a step, his foot slips slightly, causing a soft scuffle that echoes in the stillness. He freezes, listening intently for any signs of movement in response to his noise.\n\nTo his relief, there are no immediate threats. However, the sound may have drawn the attention of something lurking deeper in the corridor. Riku exchanges a glance with Hoppe, who raises an eyebrow, clearly sensing the tension in the air.\n\nWhat will Riku do next?"
+    },
+    {
+      "player": "Hoppe",
+      "action": "I try to understand what this place is as I walk along the corridor with riku. Roll for investigation",
+      "response": "As Hoppe walks alongside Riku, he takes in the intricate carvings adorning the walls, his mind racing with possibilities. He focuses on deciphering the stories depicted, hoping to glean some understanding of where they are and what events transpired in this mysterious place.\n\n*Rolling for investigation...*\n\n(Roll: 5 + relevant attribute 0 + relevant skill 0 = 5)\n\nWith keen observation, Hoppe studies the carvings closely. They illustrate scenes of a great festival, with figures dancing around a central bonfire, their faces filled with joy and laughter. Other panels depict battles against dark forces, suggesting that this place was once a vibrant community that thrived before a great conflict.\n\nAs he continues to examine the artwork, Hoppe notices a recurring symbol\u2014a stylized key similar to the one Riku found\u2014interwoven throughout the scenes. It appears to be a significant emblem, perhaps linked to the community's heritage or a powerful artifact. \n\n\"This place... it might have been a sanctuary or a stronghold,\" Hoppe remarks, excitement bubbling in his voice. \"And that key you found could be important! We need to keep our eyes peeled for anything that looks like it could be locked.\"\n\nWhat will Riku and Hoppe do next?"
+    },
+    {
+      "player": "Riku",
+      "action": "Keep moving forward an try to be aware of surroundings and avoid surprises, roll for perception",
+      "response": "Riku, feeling the weight of Hoppe's words, knows that they must remain vigilant as they proceed. He takes a moment to focus, sharpening his senses to pick up on any sounds or movements that might indicate danger. With a steady breath, he continues down the corridor, his eyes scanning the walls and the shadows closely.\n\n*Rolling for perception...*\n\n(Roll: 3 + relevant attribute 0 + relevant skill 0 = 3)\n\nAs Riku moves cautiously, he remains alert, but his senses seem dulled by the overwhelming atmosphere of the corridor. He catches glimpses of the intricate carvings, but the details blur in his mind as he navigates. The soft sound of water dripping continues to echo, but he fails to notice any subtle shifts in the air or the faintest rustle that might indicate something lurking nearby.\n\nJust as Riku begins to feel a sense of unease, a sudden sound\u2014a low growl\u2014emanates from the shadows ahead. Both Riku and Hoppe freeze, their hearts racing as they realize they are not alone in the corridor. \n\nWhat will Riku do next?"
+    },
+    {
+      "player": "Hoppe",
+      "action": "<:sadcat:836280745231384637>",
+      "response": "Seeing Riku tense up at the sound of the low growl, Hoppe's expression shifts from curiosity to concern. The gnome's wide eyes dart toward the source of the noise, and he instinctively crouches down, trying to make himself smaller and less noticeable. \n\n\"Uh-oh, that doesn\u2019t sound good,\" he whispers, his voice barely above a breath. \"What do you think it is? Should we try to sneak away or prepare for a fight?\"\n\nHoppe glances around for any potential cover, weighing their options. The corridor is narrow, and while there are shadows to hide in, the growl seems to be getting closer, echoing off the stone walls. \n\n\"Maybe we can find a way to distract it or sneak past,\" he suggests nervously, his heart racing. \"But I\u2019m not sure how much time we have!\"\n\nWhat will Riku and Hoppe do next?"
+    },
+    {
+      "player": "Riku",
+      "action": "Do I know any magic? If so, I want to cast something that creates light. Roll dice for casting spell",
+      "response": "Riku pauses, recalling the faint flickers of energy he felt earlier when he picked up the key. In this moment of urgency, he searches his mind for any knowledge of magic he might possess. Perhaps he has some latent abilities that could help them in this predicament. \n\n*Rolling for casting a spell...*\n\n(Roll: 2 + relevant attribute 0 + relevant skill 0 = 2)\n\nAs Riku attempts to summon the energy to cast a spell of light, he feels an overwhelming surge of uncertainty. The magic, instead of flowing smoothly, feels clumsy and uncoordinated, leaving him frustrated. A faint glow flickers at his fingertips for a moment, but it quickly fades, leaving him in darkness once more.\n\nThe growl from ahead grows louder, now accompanied by the sound of claws scraping against stone. Riku's heart races as he realizes that time is running out. Hoppe looks at him, wide-eyed. \n\n\"Did it work?!\" he whispers urgently, glancing nervously toward the approaching sound.\n\nWhat will Riku do next?"
+    }
+  ]
+}
