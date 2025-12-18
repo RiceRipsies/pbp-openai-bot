@@ -49,6 +49,9 @@ RULES:
 8. Track only the last action for status.
 9. If a player times out, resolve turn conservatively.
 10. Keep status posts short.
+11. Don't fill in the blanks too much, unless its necessary for the situation. Let the players dictate their actions and sayings more.
+12. Focus more on describing the surroundings and what is happening around the players, and a bit less about what the players do. EXCEPTION: if players input is very brief it is okay to make it more expressive.
+13. Try to limit the amount of things that happen in one of your post. Make the players feel they are the heroes of the story and their actions and decisions matter more.
 """
 
 openai_client = openai.OpenAI(api_key=OPENAI_API_KEY)
