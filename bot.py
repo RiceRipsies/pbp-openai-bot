@@ -17,6 +17,7 @@ GAME_CHANNEL = "game"
 TURN_TIMEOUT_HOURS = 24
 TURN_TIMEOUT_SECONDS = TURN_TIMEOUT_HOURS * 3600
 DB_TABLE = "game_state"
+CHAR_TABLE = "characters"
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -54,6 +55,7 @@ RULES:
 12. Focus more on describing the surroundings and what is happening around the players, and a bit less about what the players do. EXCEPTION: if players input is very brief it is okay to make it more expressive.
 13. Try to limit the amount of things that happen in one of your post. Make the players feel they are the heroes of the story and their actions and decisions matter more.
 14. End the turn by asking the next player what are they going to do.
+15. Do not allow players to perform actions that seem impossible.
 """
 
 openai_client = openai.OpenAI(api_key=OPENAI_API_KEY)
@@ -95,7 +97,53 @@ def ensure_schema(conn):
             )
             """
         )
+        cur.execute(
+            f"""
+            CREATE TABLE IF NOT EXISTS {CHAR_TABLE} (
+                player_name TEXT PRIMARY KEY,
+                data JSONB NOT NULL
+            )
+            """
+        )
     conn.commit()
+
+
+def _state_for_storage(state):
+    stored = dict(state)
+    stored.pop("characters", None)
+    return stored
+
+
+def load_characters(conn):
+    with conn.cursor() as cur:
+        cur.execute(f"SELECT player_name, data FROM {CHAR_TABLE}")
+        rows = cur.fetchall()
+    return {row[0]: row[1] for row in rows}
+
+
+def save_characters(conn, characters):
+    with conn.cursor() as cur:
+        for name, char_data in characters.items():
+            cur.execute(
+                f"""
+                INSERT INTO {CHAR_TABLE} (player_name, data)
+                VALUES (%s, %s)
+                ON CONFLICT (player_name) DO UPDATE SET data = EXCLUDED.data
+                """,
+                (name, Json(char_data)),
+            )
+        if characters:
+            cur.execute(
+                f"DELETE FROM {CHAR_TABLE} WHERE player_name NOT IN %s",
+                (tuple(characters.keys()),),
+            )
+        else:
+            cur.execute(f"DELETE FROM {CHAR_TABLE}")
+
+
+def clear_characters(conn):
+    with conn.cursor() as cur:
+        cur.execute(f"DELETE FROM {CHAR_TABLE}")
 
 
 def load_state():
@@ -107,13 +155,26 @@ def load_state():
             row = cur.fetchone()
             if row:
                 state = row[0]
+                legacy_characters = state.pop("characters", None)
             else:
-                state = DEFAULT_STATE.copy()
+                state = _state_for_storage(DEFAULT_STATE)
+                legacy_characters = None
                 cur.execute(
                     f"INSERT INTO {DB_TABLE} (id, state) VALUES (1, %s)",
                     (Json(state),),
                 )
                 conn.commit()
+        characters = load_characters(conn)
+        if legacy_characters and not characters:
+            characters = legacy_characters
+            save_characters(conn, characters)
+            with conn.cursor() as cur:
+                cur.execute(
+                    f"UPDATE {DB_TABLE} SET state = %s WHERE id = 1",
+                    (Json(state),),
+                )
+            conn.commit()
+        state["characters"] = characters
     for key in DEFAULT_STATE:
         state.setdefault(key, DEFAULT_STATE[key])
     if state["current_turn"] >= len(state["players"]):
@@ -131,8 +192,9 @@ def save_state(state):
                 VALUES (1, %s)
                 ON CONFLICT (id) DO UPDATE SET state = EXCLUDED.state
                 """,
-                (Json(state),),
+                (Json(_state_for_storage(state)),),
             )
+        save_characters(conn, state.get("characters", {}))
         conn.commit()
 
 
@@ -174,15 +236,15 @@ def build_game_context(state):
             turn_order.append(f"  {i+1}. {p}{marker}")
         context_parts.append("\nTURN ORDER:\n" + "\n".join(turn_order))
     
-    if state["characters"]:
-        char_parts = []
-        for name, char in state["characters"].items():
+    current = current_player(state)
+    if current:
+        char = state["characters"].get(current)
+        if char:
             attrs = char.get("attributes", {})
             skills = char.get("skills", {})
             inventory = char.get("inventory", [])
-            char_info = f"  {name}: Attributes={attrs}, Skills={skills}, Inventory={inventory}"
-            char_parts.append(char_info)
-        context_parts.append("\nALL CHARACTERS:\n" + "\n".join(char_parts))
+            char_info = f"  {current}: Attributes={attrs}, Skills={skills}, Inventory={inventory}"
+            context_parts.append("\nCURRENT CHARACTER:\n" + char_info)
     
     return "\n".join(context_parts)
 
