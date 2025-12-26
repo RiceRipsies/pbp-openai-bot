@@ -14,7 +14,6 @@ DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 GAME_CHANNEL = "game"
-STATUS_CHANNEL = "status"
 TURN_TIMEOUT_HOURS = 24
 TURN_TIMEOUT_SECONDS = TURN_TIMEOUT_HOURS * 3600
 DB_TABLE = "game_state"
@@ -159,38 +158,6 @@ def set_next_player(state, player_name):
         state["turn_start_time"] = time.time()
 
 
-async def update_status_channel(state):
-    channel = discord.utils.get(bot.get_all_channels(), name=STATUS_CHANNEL)
-    if not channel:
-        return
-    await channel.purge()
-    current = current_player(state) or "No players yet"
-    last_action = state.get("last_action", "No actions yet.")
-    scene = state.get("scene", "The adventure begins...")
-    round_num = state.get("round", 1)
-    
-    turn_order = ""
-    if state["players"]:
-        order_parts = []
-        for i, p in enumerate(state["players"]):
-            marker = " <<" if i == state["current_turn"] else ""
-            order_parts.append(f"{i+1}. {p}{marker}")
-        turn_order = " | ".join(order_parts)
-
-    await channel.send(
-        f"""**Narrative PbP RPG** - Round {round_num}
-
-**Scene:** {scene[:200]}
-
-**Current Turn:** {current}
-**Turn Order:** {turn_order}
-
-**Last Action:**
-{last_action}
-"""
-    )
-
-
 def build_game_context(state):
     context_parts = []
     
@@ -226,6 +193,34 @@ def build_history_messages(state):
         messages.append({"role": "user", "content": f"{entry['player']} acts: {entry['action']}"})
         messages.append({"role": "assistant", "content": entry['response']})
     return messages
+
+
+def format_status_message(state):
+    current = current_player(state) or "No players yet"
+    last_action = state.get("last_action", "No actions yet.")
+    scene = state.get("scene", "The adventure begins...")
+    round_num = state.get("round", 1)
+
+    turn_order = ""
+    if state["players"]:
+        order_parts = []
+        for i, p in enumerate(state["players"]):
+            marker = " <<" if i == state["current_turn"] else ""
+            order_parts.append(f"{i+1}. {p}{marker}")
+        turn_order = " | ".join(order_parts)
+
+    return (
+        f"""**Narrative PbP RPG** - Round {round_num}
+
+**Scene:** {scene[:200]}
+
+**Current Turn:** {current}
+**Turn Order:** {turn_order}
+
+**Last Action:**
+{last_action}
+"""
+    )
 
 
 def call_ai_dm(state, player_name, player_action):
@@ -276,15 +271,13 @@ async def timeout_checker():
         await channel.send(f"[TIMEOUT] **{skipped} hesitates, losing precious seconds.**")
     advance_turn(state)
     save_state(state)
-    await update_status_channel(state)
 
 
 @bot.event
 async def on_ready():
     print(f"Logged in as {bot.user}")
     timeout_checker.start()
-    state = load_state()
-    await update_status_channel(state)
+    load_state()
 
 
 @bot.event
@@ -304,7 +297,6 @@ async def on_message(message):
             "notes": ""
         }
         save_state(state)
-        await update_status_channel(state)
 
     if len(state["players"]) > 1 and player_name != current_player(state):
         await message.channel.send(f"It is not your turn. Current turn: **{current_player(state)}**")
@@ -334,24 +326,23 @@ async def on_message(message):
         await message.channel.send(f"**Next turn: {next_player}**")
 
     save_state(state)
-    await update_status_channel(state)
 
 
 @bot.command()
+@commands.has_permissions(administrator=True)
 async def nextturn(ctx):
     state = load_state()
     advance_turn(state)
     save_state(state)
-    await update_status_channel(state)
     await ctx.send("Turn advanced manually.")
 
 
 @bot.command()
+@commands.has_permissions(administrator=True)
 async def setscene(ctx, *, text):
     state = load_state()
     state["scene"] = text
     save_state(state)
-    await update_status_channel(state)
     await ctx.send(f"Scene updated: {text[:100]}...")
 
 
@@ -367,20 +358,11 @@ async def character(ctx, member: discord.Member = None):
 
 
 @bot.command()
+@commands.has_permissions(administrator=True)
 async def resetgame(ctx):
-    fresh_state = {
-        "players": [],
-        "current_turn": 0,
-        "round": 1,
-        "turn_start_time": time.time(),
-        "characters": {},
-        "last_action": "",
-        "scene": "The adventure begins...",
-        "history": []
-    }
+    fresh_state = DEFAULT_STATE.copy()
+    fresh_state["turn_start_time"] = time.time()
     save_state(fresh_state)
-    state = load_state()
-    await update_status_channel(state)
     await ctx.send("Game has been reset. All players, characters, and history cleared.")
 
 
@@ -392,6 +374,38 @@ async def players(ctx):
         return
     player_list = "\n".join([f"- {p}" + (" (current)" if p == current_player(state) else "") for p in state["players"]])
     await ctx.send(f"**Registered Players:**\n{player_list}")
+
+
+@resetgame.error
+async def resetgame_error(ctx, error):
+    if isinstance(error, commands.MissingPermissions):
+        await ctx.send("You must be an administrator to reset the game.")
+        return
+    raise error
+
+
+@nextturn.error
+async def nextturn_error(ctx, error):
+    if isinstance(error, commands.MissingPermissions):
+        await ctx.send("You must be an administrator to advance the turn.")
+        return
+    raise error
+
+
+@setscene.error
+async def setscene_error(ctx, error):
+    if isinstance(error, commands.MissingPermissions):
+        await ctx.send("You must be an administrator to set the scene.")
+        return
+    raise error
+
+
+@bot.command()
+async def status(ctx):
+    state = load_state()
+    channel = discord.utils.get(bot.get_all_channels(), name=GAME_CHANNEL)
+    if channel:
+        await channel.send(format_status_message(state))
 
 
 if DISCORD_TOKEN:
