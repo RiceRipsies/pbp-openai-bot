@@ -6,6 +6,8 @@ from discord.ext import commands, tasks
 from dotenv import load_dotenv
 import openai
 import re
+import psycopg2
+from psycopg2.extras import Json, register_default_jsonb
 
 load_dotenv()
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
@@ -15,7 +17,7 @@ GAME_CHANNEL = "game"
 STATUS_CHANNEL = "status"
 TURN_TIMEOUT_HOURS = 24
 TURN_TIMEOUT_SECONDS = TURN_TIMEOUT_HOURS * 3600
-STATE_FILE = "game_state.json"
+DB_TABLE = "game_state"
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -57,11 +59,61 @@ RULES:
 openai_client = openai.OpenAI(api_key=OPENAI_API_KEY)
 
 
+def get_db_connection():
+    database_url = os.getenv("DATABASE_URL")
+    if database_url:
+        return psycopg2.connect(database_url)
+
+    dbname = os.getenv("PGDATABASE") or os.getenv("POSTGRES_DB")
+    user = os.getenv("PGUSER") or os.getenv("POSTGRES_USER")
+    password = os.getenv("PGPASSWORD") or os.getenv("POSTGRES_PASSWORD")
+    host = os.getenv("PGHOST")
+    port = os.getenv("PGPORT")
+
+    if not all([dbname, user, host]):
+        raise RuntimeError(
+            "PostgreSQL connection info missing. Set DATABASE_URL or "
+            "PGHOST/PGDATABASE/PGUSER (and optionally PGPASSWORD/PGPORT)."
+        )
+
+    return psycopg2.connect(
+        dbname=dbname,
+        user=user,
+        password=password,
+        host=host,
+        port=port,
+    )
+
+
+def ensure_schema(conn):
+    with conn.cursor() as cur:
+        cur.execute(
+            f"""
+            CREATE TABLE IF NOT EXISTS {DB_TABLE} (
+                id INTEGER PRIMARY KEY,
+                state JSONB NOT NULL
+            )
+            """
+        )
+    conn.commit()
+
+
 def load_state():
-    if not os.path.exists(STATE_FILE):
-        save_state(DEFAULT_STATE)
-    with open(STATE_FILE, "r") as f:
-        state = json.load(f)
+    with get_db_connection() as conn:
+        register_default_jsonb(conn, loads=json.loads)
+        ensure_schema(conn)
+        with conn.cursor() as cur:
+            cur.execute(f"SELECT state FROM {DB_TABLE} WHERE id = 1")
+            row = cur.fetchone()
+            if row:
+                state = row[0]
+            else:
+                state = DEFAULT_STATE.copy()
+                cur.execute(
+                    f"INSERT INTO {DB_TABLE} (id, state) VALUES (1, %s)",
+                    (Json(state),),
+                )
+                conn.commit()
     for key in DEFAULT_STATE:
         state.setdefault(key, DEFAULT_STATE[key])
     if state["current_turn"] >= len(state["players"]):
@@ -70,8 +122,18 @@ def load_state():
 
 
 def save_state(state):
-    with open(STATE_FILE, "w") as f:
-        json.dump(state, f, indent=2)
+    with get_db_connection() as conn:
+        ensure_schema(conn)
+        with conn.cursor() as cur:
+            cur.execute(
+                f"""
+                INSERT INTO {DB_TABLE} (id, state)
+                VALUES (1, %s)
+                ON CONFLICT (id) DO UPDATE SET state = EXCLUDED.state
+                """,
+                (Json(state),),
+            )
+        conn.commit()
 
 
 def current_player(state):
