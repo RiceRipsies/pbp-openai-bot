@@ -49,7 +49,8 @@ OUTPUT RULES
 - Keep status updates short when included.
 
 TURN RULES
-- Only the active player may act; ignore others.
+- Only the active player may act; other players may use game commands like !character.
+- If the story naturally flows into an immediate follow-up, you may allow the same player to act again. This should be rare and always justified by the fiction.
 - Allow supportive commands (e.g., !character) outside a player's turn.
 - New players may join at any time.
 - If a player times out, resolve their turn conservatively.
