@@ -28,6 +28,7 @@ DEFAULT_STATE = {
     "current_turn": 0,
     "round": 1,
     "turn_start_time": time.time(),
+    "extra_turn_round": None,
     "characters": {},
     "last_action": "",
     "scene": "The adventure begins...",
@@ -50,10 +51,11 @@ OUTPUT RULES
 
 TURN RULES
 - Only the active player may act; other players may use game commands like !character.
-- If the story naturally flows into an immediate follow-up, you may allow the same player to act again. This should be rare and always justified by the fiction.
+- You may grant the same player two turns in a row when the narrative clearly requires it (e.g., immediate world reaction that calls for a quick counter).
 - Allow supportive commands (e.g., !character) outside a player's turn.
 - New players may join at any time.
 - If a player times out, resolve their turn conservatively.
+- If you grant a same-player follow-up, include the tag [EXTRA TURN] at the end of your response so the system keeps the turn. Only one extra turn is allowed per round.
 - End the turn by asking the next player what they do.
 - Do not allow actions that are clearly impossible.
 
@@ -393,11 +395,22 @@ async def on_message(message):
 
     update_skills_from_ai(state, ai_response, player_name)
 
-    advance_turn(state)
+    extra_turn = "[EXTRA TURN]" in ai_response
+    if extra_turn and state.get("extra_turn_round") == state.get("round"):
+        extra_turn = False
+
+    if not extra_turn:
+        advance_turn(state)
+    else:
+        state["turn_start_time"] = time.time()
+        state["extra_turn_round"] = state.get("round")
     
     next_player = current_player(state)
     if next_player and len(state["players"]) > 1:
-        await message.channel.send(f"**Next turn: {next_player}**")
+        if extra_turn:
+            await message.channel.send(f"**Extra turn: {next_player}**")
+        else:
+            await message.channel.send(f"**Next turn: {next_player}**")
 
     save_state(state)
 
